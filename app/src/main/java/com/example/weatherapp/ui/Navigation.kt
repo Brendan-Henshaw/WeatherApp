@@ -1,11 +1,6 @@
 package com.example.weatherapp.ui
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
@@ -14,8 +9,11 @@ import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
+import com.example.weatherapp.ui.screens.*
+import com.example.weatherapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,17 +29,7 @@ fun Navigation() {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    when (selectedIndex) {
-                        0 -> {
-                            Text("Today's Weather")
-                        }
-                        1 -> {
-                            Text("Weekly Forecast")
-                        }
-                        else -> {
-                            Text("Weather")
-                        }
-                    }
+                    Text("Lower Sackville, Nova Scotia")
                 }
             )
         },
@@ -49,7 +37,7 @@ fun Navigation() {
             NavigationBar(windowInsets = NavigationBarDefaults.windowInsets)
             {
                 NavigationBarItem(
-                    icon = { Icon(imageVector = Icons.Default.CalendarToday, contentDescription = "Today") },
+                    icon = { Icon(painter = painterResource(R.drawable.calendar_today_24px), contentDescription = "Today") },
                     label = { Text("Today") },
                     selected = selectedIndex == 0,
                     onClick = {
@@ -65,12 +53,28 @@ fun Navigation() {
                 )
 
                 NavigationBarItem(
-                    icon = { Icon(imageVector = Icons.Default.CalendarMonth, contentDescription = "Forecast") },
+                    icon = { Icon(painter = painterResource(R.drawable.calendar_month_24px), contentDescription = "Forecast") },
                     label = { Text("Forecast") },
                     selected = selectedIndex == 1,
                     onClick = {
                         selectedIndex = 1
                         navController.navigate(route="forecast"){
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
+
+                NavigationBarItem(
+                    icon = { Icon(painter = painterResource(R.drawable.calendar_clock_24px), contentDescription = "Hourly") },
+                    label = { Text("Hourly") },
+                    selected = selectedIndex == 2,
+                    onClick = {
+                        selectedIndex = 2
+                        navController.navigate(route="hourly"){
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -93,6 +97,9 @@ fun Navigation() {
             }
             composable(route = "forecast") {
                 ForecastScreen()
+            }
+            composable(route = "hourly") {
+                HourlyScreen()
             }
         }
     }
