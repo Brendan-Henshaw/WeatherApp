@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -32,6 +33,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -54,7 +56,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.material3)
     implementation(libs.androidx.appcompat)
+    implementation(libs.play.services.location)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
 }
