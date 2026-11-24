@@ -7,7 +7,9 @@ plugins {
 android {
     namespace = "com.example.weatherapp"
     compileSdk {
-        version = release(37)
+        version = release(37) {
+            minorApiLevel = 2
+        }
     }
 
     defaultConfig {
@@ -16,6 +18,17 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
+
+        val weatherApiKey =
+            project.findProperty("WEATHER_API_KEY")
+                ?.toString()
+                ?: ""
+
+        buildConfigField(
+            "String",
+            "WEATHER_API_KEY",
+            "\"$weatherApiKey\""
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -56,11 +69,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.location)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-
 }

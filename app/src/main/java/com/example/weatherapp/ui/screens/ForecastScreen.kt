@@ -13,48 +13,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.example.weatherapp.R
 import com.example.weatherapp.models.DayWeather
 
 @Composable
-fun ForecastScreen() {
+fun ForecastScreen(
+    forecast: List<DayWeather>
+) {
 
-    val forecast = listOf(
-        DayWeather(
-            date="Sunday Oct. 11th",
-            weatherImage = R.drawable.cloudy,
-            temperature="High: 13°, Low: 3°",
-            desc="Wind: 14 km/h, Humidity: 52%"),
-        DayWeather(
-            date="Monday Oct. 12",
-            weatherImage = R.drawable.rainy_2,
-            temperature="High: 15°, Low: 4°",
-            desc="Rain: 6.3 mm, Wind: 21 km/h, Humidity: 86%"),
-        DayWeather(
-            date="Tuesday Oct. 13th",
-            weatherImage = R.drawable.cloudy,
-            temperature="High: 10°, Low: 4°",
-            desc="Wind: 13 km/h, Humidity: 62%"),
-        DayWeather(
-            date="Wed. Oct. 13th",
-            weatherImage = R.drawable.rainy_3,
-            temperature="High: 12°, Low: 7°",
-            desc="Rain: 25.4 mm, Wind: 26 km/h, Humidity: 94%"),
-        DayWeather(
-            date="Thurs. Oct. 14th",
-            weatherImage = R.drawable.cloudy_2_day,
-            temperature="High: 12°, Low: 2°",
-            desc="Wind: 23 km/hr, Humidity: 70%")
-
-    )
 
     LazyColumn() {
         items(forecast) { day ->
             Row(modifier = Modifier.padding(25.dp)) {
-                Image(
-                    painter = painterResource(id = day.weatherImage),
-                    contentDescription = day.date,
-                    modifier = Modifier.size(80.dp)
+                AsyncImage(
+                    model = day.weatherImage,
+                    contentDescription = day.condition
                 )
 
                 Spacer(modifier = Modifier.width(20.dp))
@@ -63,10 +37,22 @@ fun ForecastScreen() {
                     Text(day.date,
                         style = MaterialTheme.typography.headlineSmall)
 
-                    Text(day.temperature,
-                        style = MaterialTheme.typography.bodyLarge)
+                    Text(day.condition,
+                        style = MaterialTheme.typography.bodyMedium)
 
-                    Text(day.desc,
+                    Text("High: ${day.highTemp}",
+                        style = MaterialTheme.typography.bodyMedium)
+
+                    Text("High: ${day.lowTemp}",
+                        style = MaterialTheme.typography.bodyMedium)
+
+                    Text("Max Wind: ${day.maxWind}",
+                        style = MaterialTheme.typography.bodyMedium)
+
+                    Text("Chance of Rain: ${day.precipChance}" + "Rainfall: ${day.precipitation}",
+                        style = MaterialTheme.typography.bodyMedium)
+
+                    Text("Humidity: ${day.humidity}",
                         style = MaterialTheme.typography.bodyMedium)
                 }
             }

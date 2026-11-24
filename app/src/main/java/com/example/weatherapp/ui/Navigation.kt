@@ -14,12 +14,55 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import com.example.weatherapp.ui.screens.*
 import com.example.weatherapp.R
+import com.example.weatherapp.data.dao.Forecast
+import com.example.weatherapp.models.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigation() {
+fun Navigation(
+    currentWeather: CurrentWeather?,
+    forecast: List<DayWeather>
+) {
     val navController = rememberNavController()
     var selectedIndex by remember { mutableIntStateOf(0) } // default set to 0
+
+    val testWeather = CurrentWeather(
+        location = "Lower Sackville, Nova Scotia",
+        weatherImage = "",
+        condition = "Partly Cloudy",
+        temperature = 12.0,
+        feelsLike = 10.0,
+        windDir = "NW",
+        windSpeed = 15.0,
+        precipChance = 20,
+        precipitation = 0.0,
+        humidity = 65
+    )
+
+    val testForecast = listOf(
+        DayWeather(
+            date = "2026-11-24",
+            weatherImage = "",
+            condition = "Partly Cloudy",
+            highTemp = 12.0,
+            lowTemp = 4.0,
+            maxWind = 20.0,
+            precipChance = 30,
+            precipitation = 1.2,
+            humidity = 65
+        ),
+        DayWeather(
+            date = "2026-11-25",
+            weatherImage = "",
+            condition = "Rain",
+            highTemp = 10.0,
+            lowTemp = 3.0,
+            maxWind = 25.0,
+            precipChance = 80,
+            precipitation = 12.5,
+            humidity = 82
+        )
+    )
 
     Scaffold(
         topBar = {
@@ -29,7 +72,10 @@ fun Navigation() {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Lower Sackville, Nova Scotia")
+                    Text(
+                        currentWeather?.location
+                            ?: "Loading..."
+                    )
                 }
             )
         },
@@ -67,22 +113,6 @@ fun Navigation() {
                         }
                     }
                 )
-
-                NavigationBarItem(
-                    icon = { Icon(painter = painterResource(R.drawable.calendar_clock_24px), contentDescription = "Hourly") },
-                    label = { Text("Hourly") },
-                    selected = selectedIndex == 2,
-                    onClick = {
-                        selectedIndex = 2
-                        navController.navigate(route="hourly"){
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
             }
         }
 
@@ -93,13 +123,12 @@ fun Navigation() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = "today") {
-                TodayScreen()
+                currentWeather?.let {
+                    TodayScreen(it)
+                }
             }
             composable(route = "forecast") {
-                ForecastScreen()
-            }
-            composable(route = "hourly") {
-                HourlyScreen()
+                ForecastScreen(forecast)
             }
         }
     }
