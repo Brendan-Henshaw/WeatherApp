@@ -1,49 +1,47 @@
 package com.example.weatherapp.data.dao
 
-import android.service.notification.Condition
-
 data class WeatherResponse(
-    val location: LocationInfo,
+    val location: LocationData,
     val current: Current,
     val forecast: Forecast
 )
 
-data class LocationInfo(
-    val city: String,
+data class LocationData(
+    val name: String,
     val region: String,
     val country: String
 )
 
 data class Current(
-    val temp: Double,
-    val feelsLike: Double,
+    val temp_c: Double,
+    val feelslike_c: Double,
     val humidity: Int,
-    val windSpeed: Double,
-    val windDir: String,
-    val precipitation: Double,
-    val condition: Condition
+    val wind_kph: Double,
+    val wind_dir: String,
+    val precip_mm: Double,
+    val condition: ConditionData
 )
 
 data class Forecast(
-    val forecastDay: List<ForecastDay>
+    val forecastDay: List<ForecastDayData>
 )
 
-data class ForecastDay(
+data class ConditionData(
+    val text: String,
+    val icon: String
+)
+
+data class ForecastDayData(
     val date: String,
-    val day: Day
+    val day: DayData
 )
 
-data class Day(
-    val minTemp: Double,
-    val maxTemp: Double,
-    val maxWind: Double,
-    val totalPrecip: Double,
-    val precipChance: Int,
-    val avgHumidity: Double,
-    val condition: Condition
-)
-
-data class Condition(
-    val desc: String,
-    val image: String
+data class DayData(
+    val maxtemp_c: Double,
+    val mintemp_c: Double,
+    val maxwind_kph: Double,
+    val totalprecip_mm: Double,
+    val daily_chance_of_rain: Int,
+    val avghumidity: Double,
+    val condition: ConditionData
 )

@@ -1,27 +1,33 @@
 package com.example.weatherapp
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.data.WeatherRepository
-import com.example.weatherapp.data.dao.WeatherBundle
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.weatherapp.data.dao.*
+import com.example.weatherapp.models.CurrentWeather
+import com.example.weatherapp.models.DayWeather
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val repository: WeatherRepository
 ) : ViewModel() {
+    var currentWeather by mutableStateOf<CurrentWeather?>(null)
+        private set
+    var forecast by mutableStateOf<List<DayWeather>>(emptyList())
+        private set
 
-    private val _weather =
-        MutableStateFlow<WeatherBundle?>(null)
+    init {
+        loadWeather()
+    }
 
-    val weather: StateFlow<WeatherBundle?> =
-        _weather
-
-    fun loadWeather() {
+    private fun loadWeather() {
         viewModelScope.launch {
-            _weather.value =
-                repository.getWeather()
+            currentWeather =
+                repository.getCurrentWeather()
+
+            forecast =
+                repository.getForecast()
         }
     }
 }

@@ -1,15 +1,13 @@
 package com.example.weatherapp.data
 
-import retrofit2.*
-import retrofit2.http.*
 import com.example.weatherapp.data.dao.*
+import retrofit2.http.*
 
 interface WeatherApi {
-
     @GET("v1/forecast.json")
-    suspend fun getForecast(
-        @Query("key") apiKey: String,
+    suspend fun getWeather(
+        @Query("key") apikey: String,
         @Query("q") location: String,
-        @Query("days") days: Int = 1
-    ): Response<WeatherResponse>
+        @Query("days") days: Int = 3
+    ): WeatherResponse
 }
